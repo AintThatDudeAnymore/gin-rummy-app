@@ -297,6 +297,7 @@ export default function App() {
   const [aceValue, setAceValue] = useState(5);
   const [lowCardValue, setLowCardValue] = useState(5); // value for 2-9
   const [faceCardValue, setFaceCardValue] = useState(10); // value for 10,J,Q,K
+  const [faceCardMode, setFaceCardMode] = useState("same"); // "same" | "individual"
   const [pointGoal, setPointGoal] = useState(100);
   const [customPointGoal, setCustomPointGoal] = useState("");
   const [roundGoal, setRoundGoal] = useState(10);
@@ -1061,19 +1062,57 @@ export default function App() {
                           display: "block",
                         }}
                       >
-                        10, J, Q, K Value
+                        10, J, Q, K Mode
                       </span>
-                      <div style={{ display: "flex", gap: "8px" }}>
-                        {[5, 10, 15].map((n) => (
-                          <button
-                            key={n}
-                            style={pill(faceCardValue === n)}
-                            onClick={() => setFaceCardValue(n)}
-                          >
-                            {n}
-                          </button>
-                        ))}
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <button
+                          style={pill(faceCardMode === "same")}
+                          onClick={() => setFaceCardMode("same")}
+                        >
+                          All Same
+                        </button>
+                        <button
+                          style={pill(faceCardMode === "individual")}
+                          onClick={() => setFaceCardMode("individual")}
+                        >
+                          Individual
+                        </button>
                       </div>
+
+                      {faceCardMode === "same" && (
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          {[5, 10, 15].map((n) => (
+                            <button
+                              key={n}
+                              style={pill(faceCardValue === n)}
+                              onClick={() => setFaceCardValue(n)}
+                            >
+                              {n}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {faceCardMode === "individual" && (
+                        <div
+                          style={{
+                            fontSize: "11px",
+                            color: C.creamD,
+                            padding: "10px 12px",
+                            background: "rgba(255,255,255,0.03)",
+                            borderRadius: "8px",
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          10 = 10 · J = 11 · Q = 12 · K = 13
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
@@ -1278,7 +1317,9 @@ export default function App() {
                 >
                   <span>10, J, Q, K</span>
                   <span style={{ color: C.cream, fontWeight: 600 }}>
-                    {faceCardValue} pts each
+                    {faceCardMode === "individual"
+                      ? "10, 11, 12, 13"
+                      : `${faceCardValue} pts each`}
                   </span>
                 </div>
                 <div
